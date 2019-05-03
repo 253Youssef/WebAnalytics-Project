@@ -1,0 +1,15 @@
+{% extends "mainapp/base.html" %}
+
+{% block content %}
+  <h1>Login</h1>
+  </br>
+  <form action="/login" method="post">
+    Username:<br>
+    <input type="text" name="username" value="">
+    <br>
+    Password:<br>
+    <input type="password" name="password" value="">
+    <br><br>
+    <button type="submit" name="Submit" value="Submit">Submit</button>
+  </form>
+{% endblock content %}
