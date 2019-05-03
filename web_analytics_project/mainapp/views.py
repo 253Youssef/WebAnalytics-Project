@@ -7,5 +7,6 @@ def home(request):
     return render(request, 'mainapp/index.html', context)
 
 def about(request):
-    return HttpResponse('<h1>This is the About Us page</h1>', {'title': 'About Us'})
+    
+    return render(request, 'mainapp/about.html', {'title': 'About Us'})
 

@@ -1,0 +1,12 @@
+{% extends "mainapp/base.html" %}
+{% block content %}
+  <article class="media content-section">
+        <div class="media-body">
+          <div class="article-metadata">
+            <h2 class="mr-2">About Us</h2>
+            <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+          </div>
+          <p class="article-content">This is a website for data science enthusiasts to share posts and train models.</p>
+        </div>
+    </article>
+{% endblock content %}
