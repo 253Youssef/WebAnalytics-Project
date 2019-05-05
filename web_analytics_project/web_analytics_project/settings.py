@@ -136,3 +136,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'webanalyticsdjango@gmail.com'
 EMAIL_HOST_PASSWORD = 'django_Tensor'
 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+

@@ -6,6 +6,7 @@ app_name = 'mainapp'
 
 urlpatterns = [
     path('', PostListView.as_view(), name='home'),
+    path('model/', views.text_model, name='model'),
     path('user/<str:username>', UserPostListView.as_view(), name='user-posts'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/new/', PostCreateView.as_view(), name='post-create'),

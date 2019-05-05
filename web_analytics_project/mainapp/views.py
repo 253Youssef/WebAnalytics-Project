@@ -1,8 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
+from .forms import ModelForm
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.mail import EmailMessage, send_mail
 
 def home(request):
     context = {'Posts': Post.objects.all()}
@@ -58,6 +62,31 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+@login_required
+def text_model(request):
+    if request.method == 'POST':
+        model_form = ModelForm(request.POST, request.FILES)
+        if model_form.is_valid():
+            cd = model_form.cleaned_data
+            title = cd.get('title')
+            text = str(request.FILES['file'].read())
+
+            subject = title + ' Generated Text'
+            message = text[:1000]
+            recipient_list = [request.user.email]
+            
+            email = EmailMessage(subject, message, to=recipient_list)
+            email.send()
+
+            messages.success(request, f'Please check your email for the generated text')
+            return redirect('mainapp:home')
+    else:
+        model_form = ModelForm()
+
+    context = {'model_form': model_form}
+
+    return render(request, 'mainapp/text_model.html', context)
 
 
 
