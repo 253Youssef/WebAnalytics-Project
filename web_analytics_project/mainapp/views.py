@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import EmailMessage, send_mail
 
+from .text_generation_django import generate_text_function
+
 def home(request):
     context = {'Posts': Post.objects.all()}
     return render(request, 'mainapp/index.html', context)
@@ -70,10 +72,16 @@ def text_model(request):
         if model_form.is_valid():
             cd = model_form.cleaned_data
             title = cd.get('title')
+            start_string =  cd.get('start_string')
             text = str(request.FILES['file'].read())
 
             subject = title + ' Generated Text'
-            message = text[:1000]
+            generated_sentences = generate_text_function(text, start_string)
+            message = ''
+            index = 1
+            for sentence in generated_sentences:
+                message += str(index) + '. ' + sentence + '\n\n'
+                index += 1
             recipient_list = [request.user.email]
             
             email = EmailMessage(subject, message, to=recipient_list)
