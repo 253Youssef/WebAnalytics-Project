@@ -73,11 +73,12 @@ def text_model(request):
             cd = model_form.cleaned_data
             title = cd.get('title')
             start_string =  cd.get('start_string')
+            length =  cd.get('length')
             text = str(request.FILES['file'].read())
 
             subject = title + ' Generated Text'
-            generated_sentences = generate_text_function(text, start_string)
-            message = ''
+            generated_sentences, train_perplexity = generate_text_function(text, start_string, length)
+            message = 'Train Perplexity: ' + str(train_perplexity) + '\n\n'
             index = 1
             for sentence in generated_sentences:
                 message += str(index) + '. ' + sentence + '\n\n'

@@ -6,10 +6,15 @@ tf.enable_eager_execution()
 import numpy as np
 import os
 import time
+import re
 
-def generate_text_function(input_string, start_string):
+
+def removeLinks(text):
+    return re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', text)
+
+def generate_text_function(input_string, start_string, length):
   
-  text = input_string
+  text = removeLinks(input_string)
 
   vocab = sorted(set(text))
 
@@ -101,20 +106,12 @@ def generate_text_function(input_string, start_string):
       filepath=checkpoint_prefix,
       save_weights_only=True)
 
-  EPOCHS=2
-
-  history = model.fit(dataset.repeat(), epochs=EPOCHS, steps_per_epoch=steps_per_epoch, callbacks=[checkpoint_callback])
-
-  model = build_model(
-    vocab_size = len(vocab),
-    embedding_dim=embedding_dim,
-    rnn_units=rnn_units,
-    batch_size=BATCH_SIZE)
-
   optimizer = tf.train.AdamOptimizer()
 
   # Training step
-  EPOCHS = 5
+  EPOCHS = 10
+
+  loss = 0
 
   for epoch in range(EPOCHS):
       start = time.time()
@@ -154,11 +151,13 @@ def generate_text_function(input_string, start_string):
 
   model.build(tf.TensorShape([1, None]))
 
+  train_perplexity = tf.exp(loss)
+
   def generate_text(model, start_string):
     # Evaluation step (generating text using the learned model)
 
     # Number of characters to generate
-    num_generate = 1000
+    num_generate = length
 
     # Converting our start string to numbers (vectorizing)
     input_eval = [char2idx[s] for s in start_string]
@@ -195,7 +194,9 @@ def generate_text_function(input_string, start_string):
   for _ in range(10):
     text_list.append(generate_text(model, start_string=start_string))
 
-  return text_list
+  
+
+  return text_list, train_perplexity
 
 
 
