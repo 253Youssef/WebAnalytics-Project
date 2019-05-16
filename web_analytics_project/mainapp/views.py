@@ -77,8 +77,9 @@ def text_model(request):
             text = str(request.FILES['file'].read())
 
             subject = title + ' Generated Text'
-            generated_sentences, train_perplexity = generate_text_function(text, start_string, length)
-            message = 'Train Perplexity: ' + str(train_perplexity) + '\n\n'
+            generated_sentences, train_perplexity, loss = generate_text_function(text, start_string, length)
+            message = 'Perplexity: ' + train_perplexity + '\n\n'
+            message += 'Loss: ' + loss + '\n\n'
             index = 1
             for sentence in generated_sentences:
                 message += str(index) + '. ' + sentence + '\n\n'

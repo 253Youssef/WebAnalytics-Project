@@ -9,12 +9,12 @@ import time
 import re
 
 
-def removeLinks(text):
-    return re.sub(r'\w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*', '', text)
+def filterInput(input_string):
+    return input_string
 
 def generate_text_function(input_string, start_string, length):
   
-  text = removeLinks(input_string)
+  text = filterInput(input_string)
 
   vocab = sorted(set(text))
 
@@ -41,7 +41,7 @@ def generate_text_function(input_string, start_string, length):
   dataset = sequences.map(split_input_target)
 
   # Batch size
-  BATCH_SIZE = 64
+  BATCH_SIZE = 32
   steps_per_epoch = examples_per_epoch//BATCH_SIZE
   BUFFER_SIZE = 10000
 
@@ -192,11 +192,13 @@ def generate_text_function(input_string, start_string, length):
 
   text_list = []
   for _ in range(10):
-    text_list.append(generate_text(model, start_string=start_string))
+    generated = generate_text(model, start_string=start_string)
+    generated_filtered = generated.replace('\\n', ' ')
+    generated_filtered = generated_filtered.replace('\\r', ' ')
+    generated_filtered = generated_filtered.replace('\\t', ' ')
+    text_list.append(generated_filtered)
 
-  
-
-  return text_list, train_perplexity
+  return text_list, str((str(train_perplexity).split('(')[1]).split(',')[0]), str((str(loss).split('(')[1]).split(',')[0])
 
 
 
