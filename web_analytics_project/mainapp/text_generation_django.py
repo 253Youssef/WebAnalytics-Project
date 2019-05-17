@@ -109,7 +109,7 @@ def generate_text_function(input_string, start_string, length):
   optimizer = tf.train.AdamOptimizer()
 
   # Training step
-  EPOCHS = 10
+  EPOCHS = 20
 
   loss = 0
 

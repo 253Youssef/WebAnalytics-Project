@@ -78,8 +78,8 @@ def text_model(request):
 
             subject = title + ' Generated Text'
             generated_sentences, train_perplexity, loss = generate_text_function(text, start_string, length)
-            message = 'Perplexity: ' + train_perplexity + '\n\n'
-            message += 'Loss: ' + loss + '\n\n'
+            message = 'Perplexity: ' + train_perplexity + '\n' + 'Loss: ' + loss + '\n\n'
+            message += '-------------------------------------------------------------------------------------------------------------------\n\n'
             index = 1
             for sentence in generated_sentences:
                 message += str(index) + '. ' + sentence + '\n\n'
